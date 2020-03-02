@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  mongo:
+    image: mongo:4.2.1
+    container_name: demo-mongo
+    restart: always
+    ports:
+      - 2863:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/mongo/MONGO_INITDB_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo/MONGO_INITDB_ROOT_PASSWORD
+      MONGO_INITDB_PASSWORD_FILE: /run/secrets/mongo/MONGO_INITDB_PASSWORD
+      MONGO_INITDB_USERNAME_FILE: /run/secrets/mongo/MONGO_INITDB_USERNAME
+      MONGO_INITDB_DATABASE_FILE: /run/secrets/mongo/MONGO_INITDB_DATABASE
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/secrets:/run/secrets/mongo
+      - ./mongo/entry-scripts:/docker-entrypoint-initdb.d
+      - ./mongo/mongod.conf:/etc/mongod.conf
+      - ./mongo/lib:/var/lib/mongodb
+      - ./mongo/logs:/var/log/mongodb
+  app:
+    build: ./
+    container_name: demo-backend
+    volumes:
+      - .:/app
+    tty: true
+    environment:
+      NODE_ENV: production
+      SERVER_PORT: 3001
+      MONGO_HOST: demo-mongo
+      MONGO_PORT: 27017
+    command: bash ./start.sh
+    ports:
+      - 3001:3001
+    expose:
+      - 3001
+    links:
+      - mongo
