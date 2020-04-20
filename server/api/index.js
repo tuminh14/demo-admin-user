@@ -1,4 +1,4 @@
-import path from 'path';
+
 import Express from 'express';
 import cors from 'cors';
 import compression from 'compression';
@@ -24,13 +24,11 @@ if (process.env.NODE_ENV === 'development') {
     stream: process.stderr,
   }));
   app.use(morgan(MORGAN_FORMAT, {
-    skip: (req,
-res) => {
+    skip: (req, res) => {
       if (req.originalUrl.includes('api-docs')) {
         return true;
       }
-      return res.statusCode >= 40
-0;
+      return res.statusCode >= 400;
     },
     stream: process.stdout,
   }));
@@ -50,7 +48,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use((req, res, next) => {
   res.RH = new ResponseHandler(res);
   req.headers.lang = req.headers.lang || 'en';
-  next()
+  next();
 });
 
 app.use(compression());

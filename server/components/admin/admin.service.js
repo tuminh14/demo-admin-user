@@ -269,12 +269,12 @@ export async function adminGetListProduct(options) {
   try {
     let conditions = {};
     if (options.text) {
-      conditions['$or'] = [
+      conditions = [
         {
-          productID: { $regex: options.text, $options: "i" }
+          productID: { $regex: options.text, $options: 'i' }
         }
       ]
-    }
+    };
     let count = await ProductModel.countDocuments(conditions);
     let data = await ProductModel.find(conditions).sort({createdAt: -1}).limit(options.limit).skip(options.skip).lean();
     return [count, data];

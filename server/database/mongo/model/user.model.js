@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import AdminModel from './admin.model'
+import AdminModel from './admin.model';
 
 /**
  * @swagger

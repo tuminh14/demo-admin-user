@@ -20,7 +20,7 @@ const swaggerDefinition = {
   },
   security: [{ jwt: [] }],
 };
-
+console.log(SERVER_PORT)
 const options = {
   swaggerDefinition,
   apis: [
